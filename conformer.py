@@ -609,7 +609,7 @@ class Decoder(nn.Module):
         
 
 
-        returnedge_rgbd
+        return edge_rgbd
 
 
 class JL_DCF(nn.Module):
