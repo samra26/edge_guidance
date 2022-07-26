@@ -515,21 +515,21 @@ class LDELayer(nn.Module):
             depth_tran = list_y[i]
             print("******LDE layer******")
             print(i,"     ",rgb_conv.shape,depth_tran.shape)'''
-        j=4
-        fconv_c=self.conv_c(list_x[j])
-        #print('fconv_c',fconv_c.shape)
-        fconv_c=self.pool_avg(fconv_c)
-        #print('fconv_c',fconv_c.shape)
-        fconv_c=fconv_c.flatten(2).transpose(1,2)
-        #print('fconv_c',fconv_c.shape)
-        fconv_c=torch.cat([list_y[j][:, 0][:, None, :], fconv_c], dim=1)
-        #print('fconv_c',fconv_c.shape)
-        q[j]=q[j].permute(0,2,1,3).flatten(2)
-        k[j]=k[j].permute(0,2,1,3).flatten(2)
-        v[j]=v[j].permute(0,2,1,3).flatten(2)
-        #print(q[j].shape,v[j].shape)
-        depth_lde=fconv_c*(self.softmax((q[j]*list_y[j])*k[j])*v[j])
-        rgb_lde=self.conv_rgb(list_x[j])
+        for j in range(2,5):
+            fconv_c=self.conv_c(list_x[j])
+            #print('fconv_c',fconv_c.shape)
+            fconv_c=self.pool_avg(fconv_c)
+            #print('fconv_c',fconv_c.shape)
+            fconv_c=fconv_c.flatten(2).transpose(1,2)
+            #print('fconv_c',fconv_c.shape)
+            fconv_c=torch.cat([list_y[j][:, 0][:, None, :], fconv_c], dim=1)
+            #print('fconv_c',fconv_c.shape)
+            q[j]=q[j].permute(0,2,1,3).flatten(2)
+            k[j]=k[j].permute(0,2,1,3).flatten(2)
+            v[j]=v[j].permute(0,2,1,3).flatten(2)
+            #print(q[j].shape,v[j].shape)
+            depth_lde+=fconv_c*(self.softmax((q[j]*list_y[j])*k[j])*v[j])
+            rgb_lde+=self.conv_rgb(list_x[j])
         
         '''j=8
         fconv_c=self.conv_c1(list_x[j])
