@@ -506,8 +506,8 @@ class LDELayer(nn.Module):
     def forward(self, list_x,list_y,q,k,v):
         #fconv_c=[]
         #fconv_d=[]
-        #rgb_lde=[]
-        #depth_lde=[]
+        rgb_lde=[]
+        depth_lde=[]
         
         '''for i in range(len(list_x)):
             rgb_conv = list_x[i]
@@ -528,9 +528,12 @@ class LDELayer(nn.Module):
             k[j]=k[j].permute(0,2,1,3).flatten(2)
             v[j]=v[j].permute(0,2,1,3).flatten(2)
             #print(q[j].shape,v[j].shape)
-            depth_lde+=fconv_c*(self.softmax((q[j]*list_y[j])*k[j])*v[j])
-            rgb_lde+=self.conv_rgb(list_x[j])
-        
+            depth_lde.append(fconv_c*(self.softmax((q[j]*list_y[j])*k[j])*v[j]))
+            
+            rgb_lde.append(self.conv_rgb(list_x[j]))
+       
+        sum_d=depth_lde[0]+depth_lde[1]+depth_lde[2]
+        sum_r=rgb_lde[0]+rgb_lde[1]+rgb_lde[2]
         '''j=8
         fconv_c=self.conv_c1(list_x[j])
         #print('fconv_c',fconv_c.shape)
@@ -582,7 +585,7 @@ class LDELayer(nn.Module):
         
 
 
-        return rgb_lde,depth_lde
+        return sum_r,sum_d
 
 
 
